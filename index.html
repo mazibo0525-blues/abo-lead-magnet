@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超级个体AI运营流程自查与提效工作台 v1.0</title>
+<style>
+  :root{
+    --ink:#1a1d21;--ink2:#4b5359;--ink3:#8a9198;
+    --line:#dcd9d3;--line2:#ebe8e2;--bg:#fbfaf8;--card:#fff;
+    --brand:#1b4d5c;--brand-l:#e8f1f3;
+    --warm:#a9622a;--warm-l:#fbf1e7;
+    --ok:#1c6b4a;--ok-l:#e9f4ef;
+    --no:#a63a2c;--no-l:#fbeeec;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);line-height:1.75;
+    font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+    padding:40px 22px 80px;-webkit-font-smoothing:antialiased;font-size:15px}
+  .wrap{max-width:860px;margin:0 auto}
+
+  /* 封面 */
+  .cover{border-bottom:3px solid var(--brand);padding-bottom:26px;margin-bottom:34px}
+  .tag{display:inline-block;font-size:11.5px;letter-spacing:.14em;color:#fff;background:var(--brand);
+    padding:3px 10px;border-radius:4px;font-weight:500;margin-bottom:14px}
+  h1{font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1.3}
+  .sub{margin-top:10px;color:var(--ink2);font-size:14.5px}
+  .meta{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+  .meta div{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--ink2)}
+  .meta b{display:block;color:var(--ink);font-size:13.5px;font-weight:600;margin-bottom:2px}
+
+  .notice{margin-top:18px;background:var(--warm-l);border-left:3px solid var(--warm);
+    padding:12px 15px;border-radius:0 8px 8px 0;font-size:13.5px;color:#6b4416}
+  .notice b{color:#4a2f0f}
+
+  /* 章节 */
+  section{margin-bottom:42px;page-break-inside:avoid}
+  h2{font-size:19px;font-weight:700;margin-bottom:6px;display:flex;align-items:baseline;gap:10px}
+  h2 .m{font-size:12px;font-weight:600;color:#fff;background:var(--brand);padding:2px 8px;border-radius:4px;flex:none}
+  .goal{color:var(--ink2);font-size:13.5px;margin-bottom:6px}
+  .goal b{color:var(--brand)}
+  h3{font-size:15px;font-weight:600;margin:18px 0 8px;color:var(--ink)}
+  p{font-size:14px;margin-bottom:10px}
+  .hint{font-size:13px;color:var(--ink3);margin-bottom:12px}
+  .hint b{color:var(--warm);font-weight:600}
+
+  /* 表格 */
+  table{width:100%;border-collapse:collapse;margin:10px 0 14px;font-size:13.5px;background:var(--card)}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#f4f2ee;font-weight:600;font-size:12.5px;color:var(--ink2)}
+  td.fill{height:44px;background:#fff}
+  td.fill2{height:64px}
+  .grid td{border-style:dashed}
+  caption{caption-side:bottom;text-align:left;font-size:12.5px;color:var(--ink3);padding-top:6px}
+
+  /* 分档卡 */
+  .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:12px 0}
+  .tier{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:12px 14px}
+  .tier .k{font-size:12px;color:var(--brand);font-weight:600;margin-bottom:4px}
+  .tier .t{font-weight:600;font-size:14px;margin-bottom:5px}
+  .tier .d{font-size:12.5px;color:var(--ink2);line-height:1.6}
+
+  /* 样例 */
+  .sample{background:#f7f7f5;border:1px dashed var(--line);border-radius:8px;
+    padding:12px 15px;font-size:13px;color:var(--ink2);margin:12px 0}
+  .sample::before{content:"填写样例 · 演示用，非真实数据（TEST_FIXTURE）";display:block;
+    font-size:11.5px;color:var(--warm);font-weight:600;margin-bottom:6px}
+  .sample b{color:var(--ink)}
+
+  /* 错误对照 */
+  .err{width:100%;border-collapse:collapse;font-size:13px}
+  .err th{background:#f4f2ee}
+  .err td:first-child{color:var(--no);width:44%}
+  .err td:last-child{color:var(--ok)}
+
+  /* 清单 */
+  .check{list-style:none;font-size:14px}
+  .check li{padding:7px 0 7px 28px;position:relative;border-bottom:1px dashed var(--line2)}
+  .check li::before{content:"";position:absolute;left:4px;top:13px;width:12px;height:12px;
+    border:1.5px solid var(--brand);border-radius:3px}
+
+  /* 下一步 */
+  .next{background:var(--brand-l);border-radius:10px;padding:16px 18px;margin-top:14px}
+  .next h4{font-size:14.5px;margin-bottom:8px;color:var(--brand)}
+  .next ol{font-size:13.5px;color:var(--ink2);padding-left:20px}
+  .next li{padding:3px 0}
+
+  footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--ink3)}
+  footer p{margin-bottom:4px}
+
+  @media (max-width:640px){
+    body{padding:24px 14px 60px;font-size:14.5px}
+    h1{font-size:23px}
+    table{font-size:12.5px}
+    th,td{padding:7px 8px}
+  }
+  @media print{
+    body{background:#fff;padding:0;font-size:12pt}
+    section{page-break-inside:avoid}
+    .cover{page-break-after:always}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="cover">
+    <span class="tag">免费母资料 · 可自行填写</span>
+    <h1>超级个体AI运营流程自查与提效工作台</h1>
+    <p class="sub">给有专业经验、但内容一直做不起来的人。填完它，你会得到两样东西：一张说得清的账号定位卡，和一条能直接开拍的内容行动卡。</p>
+    <div class="meta">
+      <div><b>适用人群</b>有专业技能或真实业务经验，想做内容但没稳定产出的人</div>
+      <div><b>预计耗时</b>40—60 分钟（可分两次填）</div>
+      <div><b>版本</b>v1.0</div>
+      <div><b>更新日期</b>2026-10-31</div>
+    </div>
+    <div class="notice">
+      <b>先说清楚边界</b>：这份资料帮你把「能不能开始、第一步做什么」想明白，并做出一个真实小成果。它<b>不承诺涨粉、不承诺收入、不保证爆款</b>。能不能成，取决于你填的内容是否真实，以及后续执行。
+    </div>
+  </div>
+
+  <!-- M0 -->
+  <section>
+    <h2><span class="m">M0</span>先判断你在哪一档</h2>
+    <p class="goal">目标：<b>别用错方法</b>。四种状态，卡的环节完全不同，用错力气就是白忙。</p>
+    <div class="tiers">
+      <div class="tier"><div class="k">状态一</div><div class="t">还没开始</div><div class="d">想过很多次，一条都没发。卡在「不知道讲什么」。</div></div>
+      <div class="tier"><div class="k">状态二</div><div class="t">发过但没效果</div><div class="d">发了几条到几十条，播放忽高忽低，找不到原因。</div></div>
+      <div class="tier"><div class="k">状态三</div><div class="t">有产品没成交</div><div class="d">有服务或课，但内容引不来愿意付钱的人。</div></div>
+      <div class="tier"><div class="k">状态四</div><div class="t">要系统化</div><div class="d">一个人忙不过来，想让流程跑起来。</div></div>
+    </div>
+    <table>
+      <tr><th style="width:30%">我的状态</th><th>具体表现（写一句真话）</th></tr>
+      <tr><td class="fill2" style="border-style:dashed"></td><td class="fill2" style="border-style:dashed"></td></tr>
+    </table>
+    <p class="hint"><b>用法</b>：状态一、二把 M1—M7 全填；状态三重点填 M2、M5、M7；状态四重点填 M3、M4、M7 并直接看 M8。</p>
+  </section>
+
+  <!-- M1 -->
+  <section>
+    <h2><span class="m">M1</span>个人能力盘点</h2>
+    <p class="goal">目标：<b>找出你身上别人拿不走的东西</b>。不是写简历，是找「别人问过你、你能给出答案」的问题。</p>
+    <p class="hint">三列都填满再往下走。第三列填不出来，说明这件事还不算你的优势，先划掉。</p>
+    <table class="grid">
+      <tr><th style="width:32%">我会的（具体到动作）</th><th style="width:34%">别人问过我什么</th><th>我拿得出什么证据</th></tr>
+      <tr><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+    </table>
+    <div class="sample">
+      <b>我会的</b>：给门店做过三年线上投放，能算出每单获客成本<br>
+      <b>别人问过我</b>：「我这预算该投哪个平台」「为什么投了没单」<br>
+      <b>证据</b>：手里有三家门店的投放记录（已脱敏），能从预算倒推单量
+    </div>
+    <p class="hint"><b>判定</b>：三列能对上的一条，就是你的第一个内容方向。</p>
+  </section>
+
+  <!-- M2 -->
+  <section>
+    <h2><span class="m">M2</span>账号定位检查</h2>
+    <p class="goal">目标：<b>用一句话说清「给谁、解决什么」</b>。定位不清，后面选题全靠猜。</p>
+    <p class="hint">按下面公式填，别写形容词。<b>人群越具体越好</b>，「想赚钱的人」不算人群，「开店三年、投过钱但没算过账的老板」才算。</p>
+    <table>
+      <tr><th style="width:26%">要素</th><th>我的答案</th></tr>
+      <tr><td>给谁看（具体到身份+处境）</td><td class="fill2" style="border-style:dashed"></td></tr>
+      <tr><td>他卡在哪（一句他自己的抱怨）</td><td class="fill2" style="border-style:dashed"></td></tr>
+      <tr><td>我能给什么（一个可验证的判断或方法）</td><td class="fill2" style="border-style:dashed"></td></tr>
+      <tr><td>凭什么是我（真实经历，不吹）</td><td class="fill2" style="border-style:dashed"></td></tr>
+    </table>
+    <h3>定位自检四条</h3>
+    <table class="err">
+      <tr><th>不合格</th><th>改成</th></tr>
+      <tr><td>「帮大家提升效率」</td><td>「帮开店的人把每月投放账算清楚」</td></tr>
+      <tr><td>人群写成「所有人」「年轻人」</td><td>写身份+处境，能想象出一个具体的人</td></tr>
+      <tr><td>价值写成「干货分享」</td><td>写一个别人能验证的判断</td></tr>
+      <tr><td>靠「我很有经验」立信</td><td>给一件做过的事 + 可核对的细节</td></tr>
+    </table>
+    <p class="hint"><b>完成标志</b>：把四行连起来读一遍，像不像在跟一个具体的人说话。像，就过关。</p>
+  </section>
+
+  <!-- M3 -->
+  <section>
+    <h2><span class="m">M3</span>内容支柱</h2>
+    <p class="goal">目标：<b>解决「今天发什么」</b>。支柱定了，选题就不会每天从零想。</p>
+    <p class="hint">至少 3 条，最多 5 条。每条支柱下写 2 个具体选题方向，写不出方向说明支柱太虚。</p>
+    <table class="grid">
+      <tr><th style="width:8%">#</th><th style="width:30%">支柱（一类内容）</th><th style="width:31%">选题方向 1</th><th>选题方向 2</th></tr>
+      <tr><td>1</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td>2</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td>3</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td>4</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td>5</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+    </table>
+    <div class="sample">
+      <b>支柱 1</b>：行业里被做错的常识 → 方向：「预算少反而该先投贵的词」「别一上来就投泛流量」<br>
+      <b>支柱 2</b>：真实账目拆解 → 方向：「一个月 3 万预算怎么分」「获客成本怎么算才不亏」
+    </div>
+    <p class="hint"><b>配比建议</b>：拉新（讲认知）占三成，建信（讲方法）占三成，筛选+转化占四成。<b>全是成交内容会掉粉</b>。</p>
+  </section>
+
+  <!-- M4 -->
+  <section>
+    <h2><span class="m">M4</span>基础工具清单</h2>
+    <p class="goal">目标：<b>把工具砍到最少</b>。工具越多，越容易停在「选工具」这一步。</p>
+    <p class="hint">三类各留一个，其余先删。选完先连做三条，再考虑换。</p>
+    <table>
+      <tr><th style="width:22%">环节</th><th style="width:38%">我只用这一个</th><th>它帮我解决什么</th></tr>
+      <tr><td>写（稿子、大纲）</td><td class="fill"></td><td class="fill"></td></tr>
+      <tr><td>做（拍摄、剪辑、出图）</td><td class="fill"></td><td class="fill"></td></tr>
+      <tr><td>发（发布、排期、看数据）</td><td class="fill"></td><td class="fill"></td></tr>
+    </table>
+    <p class="hint"><b>删减规则</b>：一个月没用过的、只在演示里好用的、需要先学三天才能上手的——先删。留着不用等于没有。</p>
+  </section>
+
+  <!-- M5 -->
+  <section>
+    <h2><span class="m">M5</span>选题表</h2>
+    <p class="goal">目标：<b>攒够两周的弹药</b>。一次写 10 条，之后每周只补 3 条。</p>
+    <p class="hint">「前 3 秒说什么」这一列必须是一句能直接念出口的话，不是概括。<b>写不出口播句的选题，直接划掉。</b></p>
+    <table class="grid">
+      <tr><th style="width:5%">#</th><th style="width:28%">标题（20 字内）</th><th style="width:34%">前 3 秒说什么</th><th style="width:15%">给谁看</th><th>目的</th></tr>
+      <tr><td>1</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td>2</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td>3</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td>4</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td>5</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td>6</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td>7</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td>8</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td>9</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+      <tr><td>10</td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td><td class="fill2"></td></tr>
+    </table>
+    <p class="hint">目的填：<b>拉新</b>（让陌生人停下）、<b>建信</b>（让认识的人信你）、<b>筛选</b>（挑出有需求的）、<b>转化</b>（让人动手）。一条只填一个。</p>
+  </section>
+
+  <!-- M6 -->
+  <section>
+    <h2><span class="m">M6</span>第一条内容行动卡</h2>
+    <p class="goal">目标：<b>从这 10 条里挑一条，今天就能开拍</b>。填完这张卡，你不需要再想。</p>
+    <table>
+      <tr><th style="width:24%">项</th><th>填什么</th></tr>
+      <tr><td>选哪条</td><td class="fill">第 ___ 条，标题：</td></tr>
+      <tr><td>开头第一句（照念）</td><td class="fill2" style="border-style:dashed"></td></tr>
+      <tr><td>中间讲哪 3 件事</td><td class="fill2" style="border-style:dashed">① ② ③</td></tr>
+      <tr><td>用什么证明（实物/数据/对比）</td><td class="fill2" style="border-style:dashed"></td></tr>
+      <tr><td>结尾让他做什么（只一个动作）</td><td class="fill2" style="border-style:dashed"></td></tr>
+      <tr><td>在哪拍、需要什么道具</td><td class="fill2" style="border-style:dashed"></td></tr>
+      <tr><td>什么时候拍完</td><td class="fill2" style="border-style:dashed"></td></tr>
+    </table>
+    <h3>时长与字数（照这个控，别凭感觉）</h3>
+    <table>
+      <tr><th>视频时长</th><th>口播字数</th><th>大致镜数</th></tr>
+      <tr><td>30 秒</td><td>125—135 字</td><td>5—7 个</td></tr>
+      <tr><td>60 秒</td><td>250—270 字</td><td>8—10 个</td></tr>
+      <tr><td>90 秒</td><td>380—405 字</td><td>14—18 个</td></tr>
+    </table>
+    <p class="hint">超字数就砍内容，<b>不要加快语速</b>。每 15 秒要有一个信息转折，不然人划走。</p>
+  </section>
+
+  <!-- M7 -->
+  <section>
+    <h2><span class="m">M7</span>发布复盘基础表</h2>
+    <p class="goal">目标：<b>让下一条比这条好</b>。不发数据、只凭感觉复盘，等于没复盘。</p>
+    <p class="hint">发布后 24 小时和 72 小时各回填一次。<b>没数据就写 NA，不要估。</b></p>
+    <table class="grid">
+      <tr><th style="width:26%">字段</th><th style="width:22%">T+24</th><th style="width:22%">T+72</th><th>说明</th></tr>
+      <tr><td>播放量</td><td class="fill"></td><td class="fill"></td><td>平台后台真实数字</td></tr>
+      <tr><td>前 3 秒留存</td><td class="fill"></td><td class="fill"></td><td>看钩子有没有效</td></tr>
+      <tr><td>完播率</td><td class="fill"></td><td class="fill"></td><td>看结构有没有拖</td></tr>
+      <tr><td>评论数 / 有效提问</td><td class="fill"></td><td class="fill"></td><td>看有没有打中人</td></tr>
+      <tr><td>涨粉</td><td class="fill"></td><td class="fill"></td><td>—</td></tr>
+      <tr><td>主动咨询 / 领资料</td><td class="fill"></td><td class="fill"></td><td>看承接是否顺</td></tr>
+    </table>
+    <h3>判定线（达不到就改，不是内容不行，是某一环断了）</h3>
+    <table>
+      <tr><th style="width:30%">指标</th><th>低于这条线，先改什么</th></tr>
+      <tr><td>前 3 秒留存偏低</td><td>改第一句，不是改整条</td></tr>
+      <tr><td>完播率低</td><td>砍时长、去铺垫，把结论提前</td></tr>
+      <tr><td>有播放没评论</td><td>结尾换成一个好回答的问题</td></tr>
+      <tr><td>有评论没咨询</td><td>承接方式不对，或内容没给到「下一步」</td></tr>
+    </table>
+    <p class="hint"><b>一次只改一个变量</b>。同时改三处，你不知道是哪处起的作用。</p>
+  </section>
+
+  <!-- M8 -->
+  <section>
+    <h2><span class="m">M8</span>常见错误对照</h2>
+    <p class="goal">目标：<b>避开九个最高频的坑</b>。这些都是反复出现、且一次就能改掉的。</p>
+    <table class="err">
+      <tr><th>常见做法</th><th>问题在哪 → 改成</th></tr>
+      <tr><td>先学工具，学完再做内容</td><td>会一直学下去 → 先用一个工具做出第一条</td></tr>
+      <tr><td>开头先自我介绍「大家好我是…」</td><td>三秒内被划走 → 第一句直接说他的痛点或反常识</td></tr>
+      <tr><td>一条讲五个点，怕漏</td><td>一个都记不住 → 一条只讲一个判断</td></tr>
+      <tr><td>只讲道理，不给证据</td><td>没人信 → 加实物、数据或对比</td></tr>
+      <tr><td>结尾「点赞关注转发」全上</td><td>等于没有指令 → 只留一个动作</td></tr>
+      <tr><td>发完就等，不看数据</td><td>永远不知道为什么有效 → 24 / 72 小时各看一次</td></tr>
+      <tr><td>数据不好就换赛道</td><td>换了还是不好 → 先只改开头或时长，试三条</td></tr>
+      <tr><td>承诺涨粉、承诺收入</td><td>违规且掉信任 → 改讲过程和判断</td></tr>
+      <tr><td>同期做三个平台</td><td>精力分散，都做不起来 → 先做一个平台做透</td></tr>
+    </table>
+  </section>
+
+  <!-- 检查清单 -->
+  <section>
+    <h2><span class="m">✓</span>完成检查清单</h2>
+    <p class="goal">全打勾再往下走。缺哪项，回上面对应模块补。</p>
+    <ul class="check">
+      <li>M0 我能说出自己处在哪一档，并写了一句真话</li>
+      <li>M1 三列对得上的至少有一条</li>
+      <li>M2 四行连起来读，像在跟一个具体的人说话</li>
+      <li>M3 至少 3 条支柱，每条有 2 个具体选题方向</li>
+      <li>M4 三个环节各只留了一个工具</li>
+      <li>M5 有 10 条选题，每条都能念出第一句</li>
+      <li>M6 挑定了一条，并写清了第一句、三件事、证据、结尾动作</li>
+      <li>M7 知道该看哪几个数，知道低于线改哪里</li>
+      <li>M8 九条错误里，我没有踩其中三条以上</li>
+    </ul>
+  </section>
+
+  <!-- 下一步 -->
+  <section>
+    <h2><span class="m">→</span>下一步做什么</h2>
+    <p class="goal">不需要一次做完所有事。<b>按这个顺序走，每一步都有可交付的小结果。</b></p>
+    <div class="next">
+      <h4>接下来 7 天</h4>
+      <ol>
+        <li><b>第 1—2 天</b>：只填 M1、M2。填完把定位卡发给一个了解你的人，问一句「这像不像我」。</li>
+        <li><b>第 3—4 天</b>：填 M5，凑够 10 条。再按 M6 挑一条，把第一句写在纸上，念三遍，别扭就重写。</li>
+        <li><b>第 5—7 天</b>：拍完、发出去。发完 24 小时回填 M7，只改一个地方，再发一条。</li>
+      </ol>
+      <p style="font-size:13px;color:var(--ink2);margin-top:10px">发出去比做完美重要。第一条的目标不是数据好，是<b>跑通一次完整流程</b>。</p>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>《超级个体AI运营流程自查与提效工作台》v1.0</b>　更新日期：2026-10-31</p>
+    <p>适用人群：有专业技能或真实业务经验、希望把经验转化为内容与产品的超级个体。</p>
+    <p>本资料不承诺涨粉、收入或爆款。演示样例均为虚构，已标注 TEST_FIXTURE，不代表真实结果。</p>
+    <p>如发现内容有误或有改进建议，欢迎反馈。</p>
+  </footer>
+
+</div>
+</body>
+</html>
